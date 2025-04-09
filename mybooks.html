@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Borrowed Books</title>
+  <link rel="stylesheet" href="mybooks.css">
+</head>
+<body>
+  <h1>My Borrowed Books</h1>
+  <div id="myBooksContainer" class="book-container"></div>
+
+  <script>
+    const myBooksContainer = document.getElementById('myBooksContainer');
+    const borrowedBooks = JSON.parse(localStorage.getItem('borrowedBooks')) || [];
+
+    borrowedBooks.forEach(book => {
+      const bookCard = document.createElement('div');
+      bookCard.className = 'book-card';
+      bookCard.innerHTML = `
+        <img src="${book.cover}" alt="${book.title}" class="book-cover">
+        <h3>${book.title}</h3>
+        <p>${book.author}</p>
+        <p><em>${book.genre}</em></p>
+      `;
+      myBooksContainer.appendChild(bookCard);
+    });
+  </script>
+</body>
+</html>

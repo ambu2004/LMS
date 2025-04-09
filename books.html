@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Books - Library System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow p-4 flex justify-between items-center">
+    <h1 class="text-xl font-bold text-blue-700">Library System</h1>
+    <div class="space-x-4">
+      <a href="home.html" class="text-gray-700 hover:text-blue-600">Home</a>
+      <a href="books.html" class="text-blue-600 font-semibold">Books</a>
+      <a href="mybooks.html" class="text-gray-700 hover:text-blue-600">My Books</a>
+      <a href="#" class="text-gray-700 hover:text-blue-600">Logout</a>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold mb-6 text-center">Available Books</h2>
+
+    <!-- Search Bar -->
+    <div class="mb-6 flex justify-center">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search by title or author..."
+        class="w-full max-w-2xl px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        onkeyup="filterBooks()"
+      />
+    </div>
+
+    <!-- Book Grid -->
+    <div id="bookGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <!-- Book Cards will be inserted here -->
+    </div>
+  </div>
+  <div id="booksContainer" class="book-container"></div>
+  <script> 
+  const books = [
+  { title: "Pride and Prejudice", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8226091-L.jpg" },
+  { title: "Harry Potter and the Sorcerer's Stone", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/7984916-L.jpg" },
+  { title: "A Game of Thrones", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8306661-L.jpg" },
+  { title: "The Old Man and the Sea", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8221251-L.jpg" },
+  { title: "Murder on the Orient Express", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8311924-L.jpg" },
+  { title: "The Shining", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8231991-L.jpg" },
+  { title: "Adventures of Huckleberry Finn", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/7984917-L.jpg" },
+  { title: "Foundation", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8227222-L.jpg" },
+  { title: "War and Peace", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8165047-L.jpg" },
+  { title: "Sapiens", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8978716-L.jpg" },
+  { title: "Emma", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8225631-L.jpg" },
+  { title: "The Winds of Winter", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8306661-L.jpg" },
+  { title: "And Then There Were None", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8311904-L.jpg" },
+  { title: "I, Robot", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8235156-L.jpg" },
+  { title: "It", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8235119-L.jpg" },
+  { title: "Sense and Sensibility", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8225633-L.jpg" },
+  { title: "Harry Potter and the Chamber of Secrets", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/7984918-L.jpg" },
+  { title: "Homo Deus", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8978715-L.jpg" },
+  { title: "The Mysterious Affair at Styles", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8311907-L.jpg" },
+  { title: "Anna Karenina", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8165051-L.jpg" },
+  { title: "Roughing It", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/7984921-L.jpg" },
+  { title: "The Caves of Steel", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8227230-L.jpg" },
+  { title: "Carrie", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8235121-L.jpg" },
+  { title: "A Clash of Kings", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8306662-L.jpg" },
+  { title: "Persuasion", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8225632-L.jpg" },
+  { title: "Harry Potter and the Prisoner of Azkaban", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/7984919-L.jpg" },
+  { title: "21 Lessons for the 21st Century", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8978713-L.jpg" },
+  { title: "Death on the Nile", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8311912-L.jpg" },
+  { title: "The Death of Ivan Ilyich", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8165053-L.jpg" },
+  { title: "The Innocents Abroad", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/7984922-L.jpg" },
+  { title: "Prelude to Foundation", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8227225-L.jpg" },
+  { title: "Misery", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8235123-L.jpg" },
+  { title: "Mansfield Park", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8225634-L.jpg" },
+  { title: "A Storm of Swords", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8306663-L.jpg" },
+  { title: "Fantastic Beasts and Where to Find Them", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/7984920-L.jpg" },
+  { title: "The Gulag Archipelago", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8978712-L.jpg" },
+  { title: "The Secret Adversary", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8311913-L.jpg" },
+  { title: "Childhood", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8165055-L.jpg" },
+  { title: "The Adventures of Tom Sawyer", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/7984923-L.jpg" },
+  { title: "Nightfall", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8227233-L.jpg" },
+  { title: "The Institute", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8235124-L.jpg" },
+  { title: "Northanger Abbey", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8225635-L.jpg" },
+  { title: "A Feast for Crows", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8306664-L.jpg" },
+  { title: "Harry Potter and the Goblet of Fire", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/7984924-L.jpg" },
+  { title: "The Brothers Karamazov", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8165056-L.jpg" },
+  { title: "The ABC Murders", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8311914-L.jpg" },
+  { title: "Resurrection", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8165057-L.jpg" },
+  { title: "Sketches New and Old", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/7984925-L.jpg" },
+  { title: "Robots and Empire", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8227235-L.jpg" },
+  { title: "Doctor Sleep", author: "Various", genre: "Fiction", cover: "https://covers.openlibrary.org/b/id/8235126-L.jpg" }
+];
+
+    const booksContainer = document.getElementById('booksContainer');
+  
+    function displayBooks(filteredBooks) {
+      booksContainer.innerHTML = '';
+      filteredBooks.forEach(book => {
+        const bookCard = document.createElement('div');
+        bookCard.className = 'book-card';
+        bookCard.innerHTML = `
+          <img src="${book.cover}" alt="${book.title}" class="book-cover">
+          <h3>${book.title}</h3>
+          <p>${book.author}</p>
+          <p><em>${book.genre}</em></p>
+          <button onclick="borrowBook('${book.title}')" class="borrow-btn">Borrow Book</button>
+        `;
+        booksContainer.appendChild(bookCard);
+      });
+    }
+  
+    function borrowBook(title) {
+  const borrowed = JSON.parse(localStorage.getItem('borrowedBooks')) || [];
+  const book = books.find(b => b.title === title);
+  if (!borrowed.some(b => b.title === book.title)) {
+    borrowed.push(book);
+    localStorage.setItem('borrowedBooks', JSON.stringify(borrowed));
+    alert(`You have borrowed "${book.title}"!`);
+  } else {
+    alert(`You already borrowed "${book.title}".`);
+  }
+}
+
+  
+    // Initial display
+    displayBooks(books);
+  
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('input', function () {
+      const query = this.value.toLowerCase();
+      const filtered = books.filter(book => book.title.toLowerCase().includes(query));
+      displayBooks(filtered);
+    });
+  </script>
+
+</body>
+</html>
